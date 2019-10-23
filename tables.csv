@@ -1,0 +1,5 @@
+,traditional analysis,data-driven analysis
+1,Done by trained linguist,Evaluated by trained linguist
+2,Could be done from scratch  ,"Need to have a previous description
+(or at least some prior expectations)"
+3,Doesn't care about amount of data,Care more about amount of data
