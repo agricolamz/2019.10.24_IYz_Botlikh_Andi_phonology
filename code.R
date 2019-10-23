@@ -1,6 +1,10 @@
 setwd("/home/agricolamz/work/materials/2019.10.23-24_IJaz_Alekseev/prezi")
 library(tidyverse)
 library(ggforce)
+library(extrafont)
+loadfonts()
+theme_set(theme_bw()+
+            theme(text = element_text(size = 19, family = "Brill")))
 
 # read data ---------------------------------------------------------------
 
@@ -39,11 +43,11 @@ data.frame(x = c(0.15, -0.15),
                      'Alekseev, Azaev 2019\n6821 words')) %>% 
   ggplot(aes(x0 = x, y0 = y, r = r, label = label)) +
   geom_circle(aes(fill = label), alpha = .2, size = 1, show.legend = FALSE) +
-  geom_text(aes(x=x*1.9, y2))+
-  geom_text(data = values, aes(x = x, y = y, label = label))+
-  coord_fixed() +
+  geom_text(aes(x=x*1.9, y2), family = "Brill", size = 5)+
+  geom_text(data = values, aes(x = x, y = y, label = label), family = "Brill", size = 6)+
+  coord_fixed()+
   theme_void()+
   ylim(-0.4, 0.4) ->
   venn
 
-ggsave(filename = "images/03_venn.png", venn, device = "png")
+ggsave(filename = "images/03_venn.png", venn, device = "png", width = 6, height = 5)
