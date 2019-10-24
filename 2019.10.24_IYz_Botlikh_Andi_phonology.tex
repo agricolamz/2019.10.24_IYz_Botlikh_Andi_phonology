@@ -8,7 +8,7 @@
 \usepackage{color, colortbl}
 \setlength{\columnseprule}{0.4pt} 
 
-\title{\Large \hspace{-0.5cm} Comparing phonological systems and syllable structure \\ of Botlikh and Zilo Andi: a data-driven analysis}
+\title{\Large \hspace{-0.5cm} Comparing phonological systems and \xcancel{syllable structure}\\ of Botlikh and Zilo Andi: a data-driven analysis}
 \author[shortname]{George Moroz}
 \institute[shortinst]{Linguistic Convergence Laboratory, NRU HSE, Moscow, Russia}
 \date{\begin{center} {\large 24 October 2019} \bigskip \\ {``Caucasian Languages: Typology and Diachrony'' in honor of M. E. Alekseev, \\ Institute of Linguistics RAS, Moscow}\\ \vfill Presentation is available here: {\large \href{https://tinyurl.com/y5xoks3l}{https://tinyurl.com/y5xoks3l} \hfill \includegraphics[height = 2.5cm]{images/01_qrcode}} \end{center}}
@@ -23,10 +23,10 @@
 \begin{tabular}{ll|l}
   & \multicolumn{1}{c|}{\textbf{Traditional analysis}} & \multicolumn{1}{c}{\textbf{Data-driven analysis}}                                                                    \\ \hline \pause
 1. & Done by trained linguist                          & Evaluated by trained linguist                                                                                       \\ \hline
-2. & Could be done from scratch                        & \begin{tabular}[c]{@{}l@{}}A previous description needed\\ (or at least prior expectations)\end{tabular} \\ \hline
+2. & Can be done from scratch                        & \begin{tabular}[c]{@{}l@{}} Previous description needed\\ (or at least prior expectations)\end{tabular} \\ \hline
 3. & Doesn't care about amount of data                 & Care more about amount of data\\ \hline
 4. & Less reproducible                 & More reproducible \\ \hline
-5. & Could not be automated & Could be automated  
+5. & Can not be automated & Can be automated  
 \end{tabular}
 \vfill \pause
 Data-driven approach to phonological description and syllable structure analysis:
@@ -39,7 +39,7 @@ Data-driven approach to phonological description and syllable structure analysis
 I will present an application of this method to Botlikh and Zilo Andi data
 \end{frame}
 
-\framepic{images/04_map}{\vspace{-0.2cm} Andi and Botlikh villages, created with lingtypology package \citep{moroz2017}}
+\framepic{images/04_map}{\vspace{0.5cm} Andi and Botlikh villages, created with lingtypology package \citep{moroz2017}}
 
 \begin{frame}
 \begin{multicols}{2}
@@ -106,12 +106,12 @@ I will present an application of this method to Botlikh and Zilo Andi data
 
 \begin{frame}{Comparing two Botlikh dictionaries}
 \begin{itemize}
-\item If we remove a stress sign then there is 2495 same words and 395 different words (14\%)
-\item If we don't remove a stress sign then there is 2027 same words and 863 different words (30\%)
-\item[\color{colorblue} $\Rightarrow$] There are 16\% of words have different stress pattern?\pause\ Including cases when stress is present in one dictionary and absent in the other. \pause 
-\item What cause the difference between dictionaries?
+\item If we remove the stress sign, there are only 2495 lexemes which look phonetically the same, and 395 are different (14\%)
+\item If we don't remove the stress sign, there are 2027 lexemes which look phonetically  the same, and 863 are different (30\%)
+\item[\color{colorblue} $\Rightarrow$] 16\% of lexemes have different stress pattern?\pause\ Including cases where stress is present in one dictionary and absent in the other. \pause 
+\item What causes the difference between dictionaries?
 \begin{itemize}
-\item Stress pattern differences in 317 words (about 11\%)
+\item Stress pattern differences in 317 lexemes (about 11\%)
 \item Multiple cases where there is a small difference that could be explained either as a typo or in terms phonological variation \\ 
 \hspace{-5em}\textit{čuhí}~`to~run’~\citep{alekseev2019}  vs. \textit{čũhí} \citep{saidovaabusov2012}, \\
 \hspace{-5em}\textit{kusu} `cherry plum’ \citep{alekseev2019}  vs. \textit{kusːu} \citep{saidovaabusov2012}
@@ -152,17 +152,30 @@ About 6 cases: & & \\
 
 \framepic{images/07_botlikh_dicts_with_stress}{}
 
-\begin{frame}{Discussion:}
+\begin{frame}{Zilo Andi data}
+Dictionary data for Zilo were collected during fieldtrips to Zilo in 2016--2019 with N. Rochant, S. Verhees, A. Martynova and A. Zakirova who contributed to the same FieldWorks project.
 \begin{itemize}
-\item Botlikh dictionaries were specially selected to share the meaning, the same procedure for Andic were not done
-\item Botlikh dictionaries contain a lot of borrowings, it is not true for the Andic dictionary
-\item Lemmata are not the same as wordforms, so gathered model should be checked with the wordform material
-\item Lemmata could contain some affix that will shift all frequencies (e.~g.~\textsc{inf} or \textsc{pl}) for some types of phonological units
-\item It is nice to compare obtained models with the models built on corpora data
-\item Model computed using row frequencies should be extended with Markov Chains and vector models (like in a Distributional semantics)\pause: only in this way it will be possible to compare \textbf{paradigmatic} and \textbf{syntagmatic} relations within the phonological systems and across languages
+\item Contain morphological affixes
+\item Doesn't contain additional affixes in a lemma form
+\item Contain different stems of the same lexeme (e. g. \textsc{sg.abs, sg.obl, pl.abs, pl.obl, pst, npst})
+\item No information about stress
 \end{itemize}
 \end{frame}
 
+\framepic{images/08_zilo_sa}{}
+
+\framepic{images/09_zilo_aa}{}
+
+\begin{frame}{Discussion:}
+\begin{itemize}
+\item Botlikh dictionaries were specially selected for shared meaning, the same procedure for the Andic dictionary was not done \pause
+\item Botlikh dictionaries contain a lot of borrowings, this is not true for the Andic dictionary \pause
+\item Lemmata are not the same as wordforms, so the model should be checked with the wordform material \pause
+\item Lemmata can contain some affix that will shift all frequencies (e.~g.~\textsc{inf}, \textsc{pl} or \textsc{=cl}) for some types of phonological units \pause
+\item It would be nice to compare the obtained models with the models built on corpora data \pause, when/if it will be available \pause
+\item Model computed using row frequencies should be extended with Markov Chains and vector models (like in a Distributional semantics)\pause: only in this way it will be possible to compare \textbf{paradigmatic} and  \textbf{syntagmatic} relations within the phonological systems and across languages
+\end{itemize}
+\end{frame}
 
 \framecard[colorblue]{{\color{colorwhite} \Large Send me a letter!\\
 agricolamzgmail.com\\ 
