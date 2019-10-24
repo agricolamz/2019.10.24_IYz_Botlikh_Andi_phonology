@@ -365,6 +365,8 @@ to_analise %>%
   count(simmilar)
 
 
+# create sressless pic ----------------------------------------------------
+
 library(tidytext)
 options(scipen = 999)
 to_analise %>% 
@@ -391,7 +393,33 @@ to_analise %>%
        y = "Number of utterances in [Saidova, Abusov 2012] (log scale)",
        title = "Comparing two Botlikh dictionaries (without stress patterns)") ->
   botlikh_dicts
-options(scipen = 0)
 
-ggsave(filename = "images/06_botlikh_dicts.png", botlikh_dicts, device = "png", width = 10, height = 7)  
+ggsave(filename = "images/06_botlikh_dicts_without_stress.png", botlikh_dicts, device = "png", width = 10, height = 7)  
+
+# create pic with a stress ------------------------------------------------
+to_analise %>% 
+  select(ipa_aa, ipa_sa, bind_id) %>% 
+  pivot_longer(names_to = "reference", values_to = "words", ipa_aa:ipa_sa) %>% 
+  mutate(reference = str_remove(reference, "ipa_")) %>% 
+  mutate(words = str_remove_all(words, "[\\(\\)]")) %>% 
+  mutate(words = str_replace(words, "tʃI", "tʃ'")) %>% # repaire qχ'ʷa`ntʃ(I)i	
+  unnest_tokens(sound, words, token = stringr::str_split, pattern = "-") %>% 
+  count(reference, sound, sort = TRUE) %>% 
+  filter(sound != "") %>%
+  spread(reference, n, fill = 0.1) %>% 
+  mutate(difference = sa - aa) %>% 
+  ggplot(aes(sa, aa, label = sound, fill = difference)) + 
+  geom_abline(slope = 1, intercept = 0, linetype = 2)+
+  geom_point()+
+  ggrepel::geom_label_repel(size = 6, segment.color =  "black", segment.alpha = 0.5, color = "white", family = "Brill")+
+  scale_x_log10()+
+  scale_y_log10()+
+  scale_fill_continuous(type = "viridis")+
+  labs(x = "Number of utterances in [Alekseev, Azaev 2019] (log scale)",
+       y = "Number of utterances in [Saidova, Abusov 2012] (log scale)",
+       title = "Comparing two Botlikh dictionaries (with stress patterns)") ->
+  botlikh_dicts
+
+ggsave(filename = "images/07_botlikh_dicts_with_stress.png", botlikh_dicts, device = "png", width = 10, height = 7)  
+options(scipen = 0)
 
