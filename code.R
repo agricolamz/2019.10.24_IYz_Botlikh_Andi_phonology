@@ -105,6 +105,8 @@ botlikh %>%
   #  pivot_longer(names_to = "reference", values_to = "lemma") %>%
   mutate(lemma_alekseev_azaev = str_replace_all(lemma_alekseev_azaev, "i", "I"),
          lemma_alekseev_azaev = str_replace_all(lemma_alekseev_azaev, "І", "I"),
+         lemma_saidova_abusov = str_replace_all(lemma_saidova_abusov, "i", "I"),
+         lemma_saidova_abusov = str_replace_all(lemma_saidova_abusov, "І", "I"),
          ipa_aa = str_remove_all(lemma_alekseev_azaev, " ?//.*"),
          ipa_aa = str_replace_all(ipa_aa, paste0("-а", stress, "ᴴ"), "-ʔ-a`-"),
          ipa_aa = str_replace_all(ipa_aa, paste0("-а", "ᴴ"), "-ʔ-ã-"),
@@ -212,12 +214,14 @@ botlikh %>%
          ipa_aa = str_replace_all(ipa_aa, "щ", "-ʃː-"),
          ipa_aa = str_replace_all(ipa_aa, "ъв", "-ʔʷ-"),
          ipa_aa = str_replace_all(ipa_aa, "ъ", "-ʔ-"),
+         ipa_aa = str_replace_all(ipa_aa, "я", "-j-a-"),
          ipa_aa = str_replace_all(ipa_aa, paste0("э", stress, "ᴴ"), "-ʔ-ẽ`-"),
          ipa_aa = str_replace_all(ipa_aa, paste0("э", "ᴴ"), "-ʔ-ẽ-"),
          ipa_aa = str_replace_all(ipa_aa, paste0("э", stress), "-ʔ-e`-"),
          ipa_aa = str_replace_all(ipa_aa, "э", "-ʔ-e-"),
          ipa_sa = str_replace_all(ipa_aa, "я", "-j-a-"),
          ipa_aa = str_replace_all(ipa_aa, "в", "-w-"),
+         ipa_aa = str_replace_all(ipa_aa, "-’", "’"),
          ipa_aa = str_replace_all(ipa_aa, "-:", "ː"),
          ipa_aa = str_replace_all(ipa_aa, "-{2,}", "-"),
          ipa_aa = str_replace_all(ipa_aa, "-\\(", "\\("),
@@ -225,8 +229,6 @@ botlikh %>%
          ipa_aa = str_remove_all(ipa_aa, "^-"),
          ipa_aa = str_remove_all(ipa_aa, "^ʔ-"),
          ipa_aa = str_remove_all(ipa_aa, "-$"),
-         lemma_saidova_abusov = str_replace_all(lemma_saidova_abusov, "i", "I"),
-         lemma_saidova_abusov = str_replace_all(lemma_saidova_abusov, "І", "I"),
          ipa_sa = str_remove_all(lemma_saidova_abusov, " ?//.*"),
          ipa_sa = str_replace_all(ipa_sa, paste0("-а", stress, "ᴴ"), "-ʔ-a`-"),
          ipa_sa = str_replace_all(ipa_sa, paste0("-а", "ᴴ"), "-ʔ-ã-"),
@@ -328,12 +330,14 @@ botlikh %>%
          ipa_sa = str_replace_all(ipa_sa, "ччв", "-tʃːʷ-"),
          ipa_sa = str_replace_all(ipa_sa, "чI", "-tʃ'-"),
          ipa_sa = str_replace_all(ipa_sa, "чч", "-tʃː-"),
+         ipa_sa = str_replace_all(ipa_sa, "чч", "-tʃː-"),
          ipa_sa = str_replace_all(ipa_sa, "чв", "-tʃʷ-"),
          ipa_sa = str_replace_all(ipa_sa, "ч", "-tʃ-"),
          ipa_sa = str_replace_all(ipa_sa, "ш", "-ʃ-"),
          ipa_sa = str_replace_all(ipa_sa, "щ", "-ʃː-"),
          ipa_sa = str_replace_all(ipa_sa, "ъв", "-ʔʷ-"),
          ipa_sa = str_replace_all(ipa_sa, "ъ", "-ʔ-"),
+         ipa_sa = str_replace_all(ipa_sa, "ю", "-j-u-"),
          ipa_sa = str_replace_all(ipa_sa, "я", "-j-a-"),
          ipa_sa = str_replace_all(ipa_sa, paste0("э", stress, "ᴴ"), "-ʔ-ẽ`-"),
          ipa_sa = str_replace_all(ipa_sa, paste0("э", "ᴴ"), "-ʔ-ẽ-"),
@@ -351,10 +355,43 @@ botlikh %>%
          !str_detect(ipa_sa, " ")) %>% 
   mutate(str_aa = str_detect(ipa_aa, "`"),
          str_sa = str_detect(ipa_sa, "`")) %>% 
-  filter(str_aa, str_sa) %>% # remove rows with unstressed words
-  mutate(ipa_aa = str_remove_all(ipa_aa, "`"),
-        ipa_sa = str_remove_all(ipa_sa, "`")) %>%
-  mutate(simmilar = ipa_aa == ipa_sa) %>% View()
+#   filter(str_aa, str_sa) %>% # remove rows with unstressed words
+#   mutate(ipa_aa = str_remove_all(ipa_aa, "`"),
+#         ipa_sa = str_remove_all(ipa_sa, "`")) %>%
+  mutate(simmilar = ipa_aa == ipa_sa) ->
+  to_analise
+
+to_analise %>% 
   count(simmilar)
 
+
+library(tidytext)
+options(scipen = 999)
+to_analise %>% 
+  mutate(ipa_aa = str_remove_all(ipa_aa, "`"),
+         ipa_sa = str_remove_all(ipa_sa, "`")) %>%
+  select(ipa_aa, ipa_sa, bind_id) %>% 
+  pivot_longer(names_to = "reference", values_to = "words", ipa_aa:ipa_sa) %>% 
+  mutate(reference = str_remove(reference, "ipa_")) %>% 
+  mutate(words = str_remove_all(words, "[\\(\\)]")) %>% 
+  mutate(words = str_replace(words, "tʃI", "tʃ'")) %>% # repaire qχ'ʷa`ntʃ(I)i	
+  unnest_tokens(sound, words, token = stringr::str_split, pattern = "-") %>% 
+  count(reference, sound, sort = TRUE) %>% 
+  filter(sound != "") %>%
+  spread(reference, n, fill = 0.1) %>% 
+  mutate(difference = sa - aa) %>% 
+  ggplot(aes(sa, aa, label = sound, fill = difference)) + 
+  geom_abline(slope = 1, intercept = 0, linetype = 2)+
+  geom_point()+
+  ggrepel::geom_label_repel(size = 6, segment.color =  "black", segment.alpha = 0.5, color = "white", family = "Brill")+
+  scale_x_log10()+
+  scale_y_log10()+
+  scale_fill_continuous(type = "viridis")+
+  labs(x = "Number of utterances in [Alekseev, Azaev 2019] (log scale)",
+       y = "Number of utterances in [Saidova, Abusov 2012] (log scale)",
+       title = "Comparing two Botlikh dictionaries (without stress patterns)") ->
+  botlikh_dicts
+options(scipen = 0)
+
+ggsave(filename = "images/06_botlikh_dicts.png", botlikh_dicts, device = "png", width = 10, height = 7)  
 
